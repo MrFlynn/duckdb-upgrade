@@ -1,0 +1,22 @@
+[project]
+name = "duckdb-upgrade"
+version = "0.1.0"
+description = "A tool to upgrade DuckDB database files."
+authors = [
+    {name = "Nick Pleatsikas", email = "nick@pleatsikas.me"},
+]
+dependencies = [
+    "packaging>=23.1",
+    "requests>=2.31.0",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.pdm.dev-dependencies]
+lint = [
+    "black>=23.7.0",
+]
+
+[tool.pdm.scripts]
+duckdb-upgrade = {call = "src.duckdb_upgrade.__main__:main"}
