@@ -105,6 +105,14 @@ def run(args: argparse.Namespace) -> None:
                 shutil.rmtree(dir, ignore_errors=True)
 
 
+class VersionWapper(Version):
+    def __init__(self, version: str) -> None:
+        if version.lower() == "latest":
+            version = str(VERSION_LOOKUP.latest())
+
+        super().__init__(version)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="duckdb_upgrade",
@@ -113,7 +121,7 @@ def main() -> None:
     parser.add_argument(
         "--target",
         "-t",
-        type=Version,
+        type=VersionWapper,
         default=VERSION_LOOKUP.latest(),
         required=False,
         help="DuckDB version to upgrade to",
