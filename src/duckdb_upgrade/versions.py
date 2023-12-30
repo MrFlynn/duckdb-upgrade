@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from packaging.version import Version
 from pathlib import Path
 from typing import List, Union
@@ -28,6 +29,12 @@ class VersionError(Exception):
 
     def __str__(self) -> str:
         return f"{self.storage_version} is an invalid storage version"
+
+
+class VersionUpgradeCheckResult(Enum):
+    NoAction = auto()
+    Upgrade = auto()
+    Invalid = auto()
 
 
 class VersionLookup:
@@ -82,7 +89,9 @@ class VersionLookup:
         except KeyError:
             raise VersionError(version)
 
-    def can_upgrade_to(self, current: int, target: Union[int, Version]) -> bool:
+    def can_upgrade_to(
+        self, current: int, target: Union[int, Version]
+    ) -> VersionUpgradeCheckResult:
         target_storage_version = 0
 
         if isinstance(target, Version):
@@ -90,7 +99,12 @@ class VersionLookup:
         else:
             target_storage_version = target
 
-        return target_storage_version >= current
+        if target_storage_version < current:
+            return VersionUpgradeCheckResult.Invalid
+        elif target_storage_version == current:
+            return VersionUpgradeCheckResult.NoAction
+        else:
+            return VersionUpgradeCheckResult.Upgrade
 
     def get_download_url(self, version: Union[int, Version]) -> str:
         semver = Version("0.0.0")

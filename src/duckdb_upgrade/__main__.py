@@ -10,7 +10,7 @@ from io import BytesIO
 from packaging.version import Version
 from pathlib import Path
 
-from .versions import VersionLookup, get_duckdb_version
+from .versions import VersionLookup, VersionUpgradeCheckResult, get_duckdb_version
 
 VERSION_LOOKUP = VersionLookup()
 
@@ -68,7 +68,9 @@ def run(args: argparse.Namespace) -> None:
         f"v{VERSION_LOOKUP.latest(current_storage_version)} to v{args.target}",
     )
 
-    if not VERSION_LOOKUP.can_upgrade_to(current_storage_version, args.target):
+    upgrade_check = VERSION_LOOKUP.can_upgrade_to(current_storage_version, args.target)
+
+    if upgrade_check == VersionUpgradeCheckResult.Invalid:
         all_corresponding_versions = VERSION_LOOKUP.all_versions_for_storage_number(
             current_storage_version
         )
@@ -78,6 +80,10 @@ def run(args: argparse.Namespace) -> None:
             + f"to target version {args.target} "
             + "because the current version of the database is newer than the target version."
         )
+
+    if upgrade_check == VersionUpgradeCheckResult.NoAction:
+        print("Database is already at the target version, no action will be taken")
+        return
 
     current_version = VERSION_LOOKUP.latest(current_storage_version)
     current_version_bin_path, target_version_bin_path, export_path = None, None, None
