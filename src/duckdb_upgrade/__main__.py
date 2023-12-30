@@ -5,7 +5,7 @@ import requests
 import tempfile
 import zipfile
 
-from enum import StrEnum
+from enum import Enum, auto
 from io import BytesIO
 from packaging.version import Version
 from pathlib import Path
@@ -34,9 +34,12 @@ def get_executable(url: str, version: Version) -> Path:
     return binary_path
 
 
-class DuckDBOperation(StrEnum):
-    Export = "EXPORT"
-    Import = "IMPORT"
+class DuckDBOperation(Enum):
+    Export = auto()
+    Import = auto()
+
+    def __str__(self) -> str:
+        return self.name.upper()
 
 
 def run_duckdb_migration_command(

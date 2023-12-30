@@ -1,19 +1,31 @@
-import enum
 import platform
 import sys
 
+from enum import Enum, auto
 from typing import NamedTuple
 
 
-class Platforms(enum.StrEnum):
-    Linux = "linux"
-    MacOS = "osx"
-    Windows = "windows"
+class Platforms(Enum):
+    Linux = auto()
+    MacOS = auto()
+    Windows = auto()
+
+    def __str__(self) -> str:
+        if self == self.MacOS:
+            return "osx"
+
+        return self.name.lower()
 
 
-class Architectures(enum.StrEnum):
-    AMD64 = "amd64"
-    ARM64 = "aarch64"
+class Architectures(Enum):
+    AMD64 = auto()
+    ARM64 = auto()
+
+    def __str__(self) -> str:
+        if self == self.ARM64:
+            return "aarch64"
+
+        return self.name.lower()
 
 
 class PlatformDetails(NamedTuple):
