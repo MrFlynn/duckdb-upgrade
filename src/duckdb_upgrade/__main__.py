@@ -31,6 +31,7 @@ def get_executable(url: str, version: Version) -> Path:
     binary_path = storage_dir.joinpath("duckdb")
     binary_path.chmod(0o744)
 
+    print(f"Downloaded CLI for DuckDB v{version}")
     return binary_path
 
 
@@ -45,6 +46,7 @@ class DuckDBOperation(Enum):
 def run_duckdb_migration_command(
     op: DuckDBOperation, binary: Path, db: Path, tempdir: Path
 ) -> None:
+    print(f"{str(op).lower().capitalize()}ing database...")
     result = subprocess.run(
         [binary, "-c", f"{str(op)} DATABASE '{tempdir}'", db], capture_output=True
     )
@@ -55,9 +57,16 @@ def run_duckdb_migration_command(
             + f"\nstdout:\n{result.stdout}\n\nstderr:\n{result.stderr}"
         )
 
+    print("Done")
+
 
 def run(args: argparse.Namespace) -> None:
     current_storage_version = get_duckdb_version(args.database)
+
+    print(
+        "Attempting to upgrade DuckDB database from",
+        f"v{VERSION_LOOKUP.latest(current_storage_version)} to v{args.target}",
+    )
 
     if not VERSION_LOOKUP.can_upgrade_to(current_storage_version, args.target):
         all_corresponding_versions = VERSION_LOOKUP.all_versions_for_storage_number(
@@ -89,17 +98,23 @@ def run(args: argparse.Namespace) -> None:
         # Unless explicitly told otherwise, back up the file in the same directory with
         # the '.bak' suffix.
         if not args.no_backup:
-            args.database.replace(
-                args.database.with_suffix(f"{''.join(args.database.suffixes)}.bak")
+            backup_file = args.database.with_suffix(
+                f"{''.join(args.database.suffixes)}.bak"
             )
+
+            print(f"Backing up original database to {backup_file}")
+            args.database.replace(backup_file)
         else:
             args.database.unlink()
 
         run_duckdb_migration_command(
             DuckDBOperation.Import, target_version_bin_path, args.database, export_path
         )
+
+        print("🎉 Successfully upgraded database 🎉")
     finally:
         # Always remove temporary directories.
+        print("Cleaning up temporary directories...")
         for dir in [current_version_bin_path, target_version_bin_path, export_path]:
             if dir:
                 shutil.rmtree(dir, ignore_errors=True)
