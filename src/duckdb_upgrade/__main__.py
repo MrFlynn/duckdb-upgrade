@@ -115,7 +115,7 @@ class VersionWapper(Version):
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="duckdb_upgrade",
+        prog="duckdb-upgrade",
         description="Upgrade DuckDB database file to a specific version",
     )
     parser.add_argument(
