@@ -25,7 +25,10 @@ def get_executable(url: str, version: Version) -> Path:
     duckdb_cli_zip.extract("duckdb", path=storage_dir)
     duckdb_cli_zip.close()
 
-    return storage_dir.joinpath("duckdb")
+    binary_path = storage_dir.joinpath("duckdb")
+    binary_path.chmod(0o744)
+
+    return binary_path
 
 
 def run(args: argparse.Namespace) -> None:
