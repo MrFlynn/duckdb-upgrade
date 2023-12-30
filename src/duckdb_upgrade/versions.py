@@ -32,8 +32,11 @@ class VersionError(Exception):
 
 class VersionLookup:
     DUCKDB_CLI_DOWNLOAD_URL = "https://github.com/duckdb/duckdb/releases/download/v{version}/duckdb_cli-{platform}-{arch}.zip"
+
+    # Based on the following struct:
+    # https://github.com/duckdb/duckdb/blob/dae3b286b04cb2e89cf624e6104c94afaf5b7468/src/storage/storage_info.cpp#L12
     VERSION_TABLE = {
-        64: [Version("0.9.0"), Version("0.9.1")],
+        64: [Version("0.9.0"), Version("0.9.1"), Version("0.9.2")],
         51: [Version("0.8.0"), Version("0.8.1")],
         42: [Version("0.7.0"), Version("0.7.1")],
         39: [Version("0.6.0"), Version("0.6.1")],
