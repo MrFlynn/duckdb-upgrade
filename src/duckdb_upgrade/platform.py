@@ -55,7 +55,6 @@ VALID_PLATFORMS = {
     PlatformDetails(Platforms.Linux, Architectures.ARM64),
     PlatformDetails(Platforms.MacOS, Architectures.AMD64),
     PlatformDetails(Platforms.MacOS, Architectures.ARM64),
-    PlatformDetails(Platforms.Linux, Architectures.ARM64),
     PlatformDetails(Platforms.Windows, Architectures.AMD64),
 }
 
