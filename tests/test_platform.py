@@ -73,7 +73,7 @@ def test_invalid_platform_str() -> None:
     )
 
 
-def test_get_platform_details(monkeypatch) -> None:
+def test_get_platform_details(monkeypatch: pytest.MonkeyPatch) -> None:
     class Test(NamedTuple):
         Result: Optional[platform.PlatformDetails]
         SysPlatformPatchValue: str
