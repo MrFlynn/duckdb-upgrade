@@ -71,9 +71,10 @@ def get_platform_details() -> PlatformDetails:
     else:
         raise InvalidPlatform()
 
-    if platform.machine() == "x86_64":
+    arch = platform.machine().lower()
+    if arch == "x86_64" or arch == "amd64":
         current_arch = Architectures.AMD64
-    elif platform.machine() == "arm64":
+    elif arch == "arm64" or arch == "aarch64":
         current_arch = Architectures.ARM64
     else:
         raise InvalidPlatform()
