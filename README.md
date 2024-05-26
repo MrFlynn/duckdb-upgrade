@@ -1,4 +1,7 @@
 # duckdb-upgrade
+
+[![Tests](https://github.com/MrFlynn/duckdb-upgrade/actions/workflows/test.yaml/badge.svg)](https://github.com/MrFlynn/duckdb-upgrade/actions/workflows/test.yaml)
+
 A tool to easily upgrade duckdb databases from one version to another. It
 automates the process of exporting the contents of a DuckDB database and
 then importing them into a newer version of a DuckDB database.
