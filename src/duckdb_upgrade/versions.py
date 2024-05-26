@@ -43,7 +43,14 @@ class VersionLookup:
     # Based on the following struct:
     # https://github.com/duckdb/duckdb/blob/dae3b286b04cb2e89cf624e6104c94afaf5b7468/src/storage/storage_info.cpp#L12
     VERSION_TABLE = {
-        64: [Version("0.9.0"), Version("0.9.1"), Version("0.9.2")],
+        64: [
+            Version("0.9.0"),
+            Version("0.9.1"),
+            Version("0.9.2"),
+            Version("v0.10.0"),
+            Version("v0.10.1"),
+            Version("v0.10.2"),
+        ],
         51: [Version("0.8.0"), Version("0.8.1")],
         42: [Version("0.7.0"), Version("0.7.1")],
         39: [Version("0.6.0"), Version("0.6.1")],
