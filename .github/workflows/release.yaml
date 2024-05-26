@@ -46,4 +46,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: >-
             ghcr.io/mrflynn/duckdb-upgrade:latest,
-            ghcr.io/mrflynn/duckdb-upgrade:${{ github.ref }}
+            ghcr.io/mrflynn/duckdb-upgrade:${{ github.ref_name }}
