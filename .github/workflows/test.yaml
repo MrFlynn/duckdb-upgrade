@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    paths:
+      - '**.py'
+      - 'pdm.lock'
+      - 'pyproject.toml'
+  pull_request:
+    paths:
+      - '**.py'
+      - 'pdm.lock'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install PDM
+      uses: pdm-project/setup-pdm@v4
+    - name: Install dependencies
+      run: |
+        pdm install -dG :all
+    - name: Run tests
+      run: |
+        pdm run pytest
+    - name: Run formatting checks
+      run: |
+        pdm run black --check .
