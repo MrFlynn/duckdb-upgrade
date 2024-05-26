@@ -18,7 +18,7 @@ def get_duckdb_version(database_file: Path) -> int:
         if db_file.read(HEADER_MAGIC_SIZE) != HEADER_MAGIC_STRING:
             raise IOError(f"{database_file} is not a valid DuckDB file")
 
-        return int.from_bytes(db_file.read(HEADER_VERSION_SIZE))
+        return int.from_bytes(db_file.read(HEADER_VERSION_SIZE), byteorder="big")
 
 
 class VersionError(Exception):
