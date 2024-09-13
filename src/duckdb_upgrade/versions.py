@@ -41,7 +41,7 @@ class VersionLookup:
     DUCKDB_CLI_DOWNLOAD_URL = "https://github.com/duckdb/duckdb/releases/download/v{version}/duckdb_cli-{platform}-{arch}.zip"
 
     # Based on the following struct:
-    # https://github.com/duckdb/duckdb/blob/dae3b286b04cb2e89cf624e6104c94afaf5b7468/src/storage/storage_info.cpp#L12
+    # https://github.com/duckdb/duckdb/blob/main/src/storage/storage_info.cpp#L24
     VERSION_TABLE = {
         64: [
             Version("0.9.0"),
@@ -50,6 +50,9 @@ class VersionLookup:
             Version("v0.10.0"),
             Version("v0.10.1"),
             Version("v0.10.2"),
+            Version("v0.10.3"),
+            Version("v1.0.0"),
+            Version("v1.1.0"),
         ],
         51: [Version("0.8.0"), Version("0.8.1")],
         42: [Version("0.7.0"), Version("0.7.1")],

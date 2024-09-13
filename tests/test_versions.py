@@ -52,7 +52,7 @@ def test_version_lookup_latest() -> None:
 
     lookup = versions.VersionLookup()
     tests = [
-        Test(StorageVersion=0, Result=Version("0.10.2"), ShouldAssert=False),
+        Test(StorageVersion=0, Result=Version("1.1.0"), ShouldAssert=False),
         Test(StorageVersion=10000, Result=Version("0.0.0"), ShouldAssert=True),
     ] + [
         Test(StorageVersion=sv, Result=max(vs), ShouldAssert=False)
@@ -120,7 +120,7 @@ def test_version_lookup_get_download_url(monkeypatch: pytest.MonkeyPatch) -> Non
             Version=64,
             Platform="linux",
             Arch="x86_64",
-            Result="https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip",
+            Result="https://github.com/duckdb/duckdb/releases/download/v1.1.0/duckdb_cli-linux-amd64.zip",
             ShouldAssert=False,
         ),
         Test(
