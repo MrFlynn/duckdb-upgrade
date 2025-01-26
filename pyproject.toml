@@ -27,13 +27,16 @@ test = [
 
 [tool.pdm.scripts]
 duckdb-upgrade = {call = "src.duckdb_upgrade.__main__:main"}
-
 pre_build = {composite = [
     "mkdir -p src/duckdb_upgrade/data",
     """cp \
         vendor/duckdb/src/storage/version_map.json \
         src/duckdb_upgrade/data/version_map.json
     """,
+]}
+test = {composite = [
+    "pre_build",
+    "pytest --ignore=vendor/"
 ]}
 
 [tool.pdm.build]
