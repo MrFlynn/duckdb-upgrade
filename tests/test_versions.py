@@ -52,11 +52,11 @@ def test_version_lookup_latest() -> None:
 
     lookup = versions.VersionLookup()
     tests = [
-        Test(StorageVersion=0, Result=Version("1.1.0"), ShouldAssert=False),
+        Test(StorageVersion=0, Result=Version("1.2.0"), ShouldAssert=False),
         Test(StorageVersion=10000, Result=Version("0.0.0"), ShouldAssert=True),
     ] + [
         Test(StorageVersion=sv, Result=max(vs), ShouldAssert=False)
-        for sv, vs in lookup.VERSION_TABLE.items()
+        for sv, vs in lookup.version_table.items()
     ]
 
     for test in tests:
@@ -70,7 +70,7 @@ def test_version_lookup_latest() -> None:
 def test_version_lookup_all_versions_for_storage_number() -> None:
     lookup = versions.VersionLookup()
 
-    for sv, vs in lookup.VERSION_TABLE.items():
+    for sv, vs in lookup.version_table.items():
         assert lookup.all_versions_for_storage_number(sv) == vs
 
 
@@ -120,7 +120,7 @@ def test_version_lookup_get_download_url(monkeypatch: pytest.MonkeyPatch) -> Non
             Version=64,
             Platform="linux",
             Arch="x86_64",
-            Result="https://github.com/duckdb/duckdb/releases/download/v1.1.0/duckdb_cli-linux-amd64.zip",
+            Result="https://github.com/duckdb/duckdb/releases/download/v1.1.3/duckdb_cli-linux-amd64.zip",
             ShouldAssert=False,
         ),
         Test(

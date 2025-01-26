@@ -1,7 +1,9 @@
+import json
+
 from enum import Enum, auto
 from packaging.version import Version
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
 from .platform import get_platform_details
 
@@ -40,59 +42,40 @@ class VersionUpgradeCheckResult(Enum):
 class VersionLookup:
     DUCKDB_CLI_DOWNLOAD_URL = "https://github.com/duckdb/duckdb/releases/download/v{version}/duckdb_cli-{platform}-{arch}.zip"
 
-    # Based on the following struct:
-    # https://github.com/duckdb/duckdb/blob/main/src/storage/storage_info.cpp#L24
-    VERSION_TABLE = {
-        64: [
-            Version("0.9.0"),
-            Version("0.9.1"),
-            Version("0.9.2"),
-            Version("v0.10.0"),
-            Version("v0.10.1"),
-            Version("v0.10.2"),
-            Version("v0.10.3"),
-            Version("v1.0.0"),
-            Version("v1.1.0"),
-        ],
-        51: [Version("0.8.0"), Version("0.8.1")],
-        42: [Version("0.7.0"), Version("0.7.1")],
-        39: [Version("0.6.0"), Version("0.6.1")],
-        38: [Version("0.5.0"), Version("0.5.1")],
-        33: [Version("0.3.3"), Version("0.3.4"), Version("0.4.0")],
-        31: [Version("0.3.2")],
-        27: [Version("0.3.1")],
-        25: [Version("0.3.0")],
-        21: [Version("0.2.9")],
-        18: [Version("0.2.8")],
-        17: [Version("0.2.7")],
-        15: [Version("0.2.6")],
-        13: [Version("0.2.5")],
-        11: [Version("0.2.4")],
-        6: [Version("0.2.3")],
-        4: [Version("0.2.2")],
-        1: [Version("0.2.1")],
-    }
-
     def __init__(self) -> None:
+        self.version_table = self._generate_storage_table()
         return
+
+    @staticmethod
+    def _generate_storage_table() -> Dict[int, List[Version]]:
+        version_map_file = Path(__file__).resolve().parent / "data/version_map.json"
+
+        table = {}
+        with version_map_file.open("r") as f:
+            for version, storage_number in (
+                json.load(f).get("storage", {}).get("values", {}).items()
+            ):
+                table.setdefault(storage_number, []).append(Version(version))
+
+        return table
 
     def latest(self, storage_version: int = 0) -> Version:
         if storage_version <= 0:
-            storage_version = max(self.VERSION_TABLE.keys())
+            storage_version = max(self.version_table.keys())
 
         try:
-            return max(self.VERSION_TABLE[storage_version])
+            return max(self.version_table[storage_version])
         except KeyError:
             raise VersionError(storage_version)
 
     def all_versions_for_storage_number(self, storage_version: int) -> List[Version]:
         try:
-            return self.VERSION_TABLE[storage_version]
+            return self.version_table[storage_version]
         except:
             raise VersionError(storage_version)
 
     def _reverse_version_lookup(self, version: Version) -> int:
-        reversed_index = {v: k for k, l in self.VERSION_TABLE.items() for v in l}
+        reversed_index = {v: k for k, l in self.version_table.items() for v in l}
 
         try:
             return reversed_index[version]
