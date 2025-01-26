@@ -37,4 +37,4 @@ jobs:
           pdm run test
       - name: Run formatting checks
         run: |
-          pdm run black --check .
+          pdm run black --check --extend-exclude vendor/ .
