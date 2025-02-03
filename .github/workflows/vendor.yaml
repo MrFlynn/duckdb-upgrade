@@ -1,0 +1,25 @@
+name: Update duckdb submodule
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch: ~
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: sgoudham/update-git-submodules@v2.1.1
+        id: submodule
+        with:
+          strategy: tag
+      - uses: peter-evans/create-pull-request@v7
+        if: ${{ steps.submodule.outputs['duckdb--updated'] }}
+        with:
+          title: "New DuckDB version ${{ steps.submodule.outputs['duckdb--latestTag'] }}"
+          commit-message: "Update DuckDB submodule ref to ${{ steps.submodule.outputs['duckdb--latestTag'] }}"
+          body: ${{ steps.submodule.outputs.prBody }}
+          branch: duckdb-vendor-submodule
