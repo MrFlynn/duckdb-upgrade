@@ -13,10 +13,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.13"
       - name: Install PDM
         uses: pdm-project/setup-pdm@v4
       - name: Install dependencies and build

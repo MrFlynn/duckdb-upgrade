@@ -13,6 +13,10 @@ requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
 
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
 [tool.pdm.dev-dependencies]
 lint = [
     "black>=23.7.0",
@@ -23,6 +27,23 @@ test = [
 
 [tool.pdm.scripts]
 duckdb-upgrade = {call = "src.duckdb_upgrade.__main__:main"}
+pre_build = {composite = [
+    "mkdir -p src/duckdb_upgrade/data",
+    """cp \
+        vendor/duckdb/src/storage/version_map.json \
+        src/duckdb_upgrade/data/version_map.json
+    """,
+]}
+test = {composite = [
+    "pre_build",
+    "pytest --ignore=vendor/"
+]}
+
+[tool.pdm.build]
+includes = [
+    "src", 
+    "src/duckdb_upgrade/data/version_map.json"
+]
 
 [project.scripts]
 duckdb-upgrade = "duckdb_upgrade.__main__:main"
