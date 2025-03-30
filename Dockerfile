@@ -13,6 +13,8 @@ WORKDIR /app
 COPY src/ .
 COPY pyproject.toml .
 COPY pdm.lock .
+COPY README.md .
+COPY vendor/duckdb/src/storage/version_map.json duckdb_upgrade/data/version_map.json
 
 # Create virtual environment and install dependencies
 RUN python3 -m pdm venv create -f && \
