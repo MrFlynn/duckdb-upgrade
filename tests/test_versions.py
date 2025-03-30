@@ -6,7 +6,7 @@ import tempfile
 from packaging.version import Version
 from pathlib import Path
 from src.duckdb_upgrade import versions
-from typing import List, NamedTuple, Union
+from typing import NamedTuple, Union
 
 
 def test_get_duckdb_version() -> None:
@@ -41,7 +41,7 @@ def test_get_duckdb_version() -> None:
 
 
 def test_version_error_str() -> None:
-    assert str(versions.VersionError(10)) == f"10 is an invalid storage version"
+    assert str(versions.VersionError(10)) == "10 is an invalid storage version"
 
 
 def test_version_lookup_latest() -> None:
