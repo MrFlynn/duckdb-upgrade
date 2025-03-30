@@ -6,7 +6,7 @@ import tempfile
 from packaging.version import Version
 from pathlib import Path
 from src.duckdb_upgrade import versions
-from typing import List, NamedTuple, Union
+from typing import NamedTuple, Union
 
 
 def test_get_duckdb_version() -> None:
@@ -41,7 +41,7 @@ def test_get_duckdb_version() -> None:
 
 
 def test_version_error_str() -> None:
-    assert str(versions.VersionError(10)) == f"10 is an invalid storage version"
+    assert str(versions.VersionError(10)) == "10 is an invalid storage version"
 
 
 def test_version_lookup_latest() -> None:
@@ -50,9 +50,13 @@ def test_version_lookup_latest() -> None:
         Result: Version
         ShouldAssert: bool
 
+    def get_latest_version() -> Version:
+        with Path(__file__).resolve().parent.joinpath("latest.txt").open("r") as f:
+            return Version(f.read())
+
     lookup = versions.VersionLookup()
     tests = [
-        Test(StorageVersion=0, Result=Version("1.2.0"), ShouldAssert=False),
+        Test(StorageVersion=0, Result=get_latest_version(), ShouldAssert=False),
         Test(StorageVersion=10000, Result=Version("0.0.0"), ShouldAssert=True),
     ] + [
         Test(StorageVersion=sv, Result=max(vs), ShouldAssert=False)
