@@ -6,11 +6,10 @@ on:
       - "**.py"
       - "pdm.lock"
       - "pyproject.toml"
+      - vendor/duckdb
   pull_request:
-    paths:
-      - "**.py"
-      - "pdm.lock"
-      - "pyproject.toml"
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
