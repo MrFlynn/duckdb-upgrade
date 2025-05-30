@@ -25,6 +25,11 @@ jobs:
         run: |
           pdm install -dG :all
           pdm build
+      - name: Fix sdist package name (PEP 625)
+        run: |
+          mv \
+            dist/duckdb-upgrade-${{ github.ref_name }}.tar.gz \
+            dist/duckdb_upgrade-${{ github.ref_name }}.tar.gz
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
   docker:
