@@ -83,7 +83,11 @@ def main() -> None:
     gen_test_data.set_defaults(func=generate_test_data, parser=parser)
 
     args = parser.parse_args()
-    args.func(args, args.parser)
+
+    if hasattr(args, "func"):
+        args.func(args, args.parser)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
