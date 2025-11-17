@@ -1,6 +1,6 @@
 [project]
 name = "duckdb-upgrade"
-version = "0.7.0"
+version = "0.8.0"
 description = "A tool to upgrade DuckDB database files."
 authors = [
     {name = "Nick Pleatsikas", email = "nick@pleatsikas.me"},
