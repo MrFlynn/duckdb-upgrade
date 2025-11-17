@@ -14,28 +14,16 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [build-system]
-requires = ["pdm-pep517"]
-build-backend = "pdm.pep517.api"
+requires = ["uv_build>=0.9.9,<0.10.0"]
+build-backend = "uv_build"
 
-[tool.pdm.dev-dependencies]
-lint = [
+[tool.hatch.build.targets.wheel]
+packages = ["src/duckdb_upgrade"]
+
+[dependency-groups]
+dev = [
     "black>=23.7.0",
-]
-test = [
     "pytest>=7.4.3",
-]
-
-[tool.pdm.scripts]
-duckdb-upgrade = {call = "src.duckdb_upgrade.__main__:main"}
-
-test = {composite = [
-    "pytest --ignore=vendor/"
-]}
-
-[tool.pdm.build]
-includes = [
-    "src",
-    "src/duckdb_upgrade/data/version_map.json"
 ]
 
 [project.scripts]
