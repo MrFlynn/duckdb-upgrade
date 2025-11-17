@@ -1,29 +1,27 @@
-# Define build container
-FROM debian:12-slim AS build
-
-# Install Python
-RUN apt-get update && \
-    apt-get install --no-install-suggests --no-install-recommends --yes python3 python3-pip
-
-# Install PDM
-RUN pip install --break-system-packages --user pdm
+# Use Python 3.11 as that's what Debian 12 shipped with.
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm AS build
 
 # Copy current directory to app directory
 WORKDIR /app
-COPY src/ .
+COPY src/ src/
 COPY pyproject.toml .
-COPY pdm.lock .
+COPY uv.lock .
 COPY README.md .
-COPY vendor/duckdb/src/storage/version_map.json duckdb_upgrade/data/version_map.json
+COPY vendor/duckdb/src/storage/version_map.json src/duckdb_upgrade/data/version_map.json
 
 # Create virtual environment and install dependencies
-RUN python3 -m pdm venv create -f && \
-    python3 -m pdm install --venv in-project
+RUN uv venv .venv && \
+    uv sync --python .venv/bin/python --no-dev
 
-# Define application container
+# Application container
 FROM gcr.io/distroless/python3-debian12:latest
-COPY --from=build /app /app
 
-# Runtime
+# Copy virtualenv from build container.
+COPY --from=build /app/src /app/src
+COPY --from=build /app/.venv/lib/python3.11/site-packages /app/.venv/lib/python3.11/site-packages
 WORKDIR /app
-ENTRYPOINT [".venv/bin/python3", "-m", "duckdb_upgrade"]
+
+# Tell built-in python executable where to find packages.
+ENV PYTHONPATH="/app/src:/app/.venv/lib/python3.11/site-packages"
+
+ENTRYPOINT ["python3", "-m", "duckdb_upgrade"]
