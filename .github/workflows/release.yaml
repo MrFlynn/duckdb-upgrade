@@ -12,31 +12,23 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.13"
-      - name: Install PDM
-        uses: pdm-project/setup-pdm@v4
-      - name: Install dependencies and build
+          python-version: "3.14"
+      - name: Build package
         run: |
-          pdm install -dG :all
-          pdm build
-      - name: Fix sdist package name (PEP 625)
-        run: |
-          mv \
-            dist/duckdb-upgrade-${{ github.ref_name }}.tar.gz \
-            dist/duckdb_upgrade-${{ github.ref_name }}.tar.gz
+          uv run scripts/program-data gen-program-data
+          uv build
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
   docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: true
       - name: Set up Docker Buildx
