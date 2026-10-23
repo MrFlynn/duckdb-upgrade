@@ -22,7 +22,7 @@ to the latest version of the database.
 
 ## via Pipx
 ```bash
-$ pipx run duckdb-upgrade example.duckdb
+$ uvx duckdb-upgrade example.duckdb
 ```
 
 ## via Docker
