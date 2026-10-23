@@ -1,5 +1,5 @@
-# Use Python 3.11 as that's what Debian 12 shipped with.
-FROM ghcr.io/astral-sh/uv:python3.11-bookworm AS build
+# Use Python 3.13 as that's what Debian 13 shipped with.
+FROM ghcr.io/astral-sh/uv:python3.13-trixie AS build
 
 # Copy current directory to app directory
 WORKDIR /app
@@ -14,14 +14,14 @@ RUN uv venv .venv && \
     uv sync --python .venv/bin/python --no-dev
 
 # Application container
-FROM gcr.io/distroless/python3-debian12:latest
+FROM gcr.io/distroless/python3-debian13:latest
 
 # Copy virtualenv from build container.
 COPY --from=build /app/src /app/src
-COPY --from=build /app/.venv/lib/python3.11/site-packages /app/.venv/lib/python3.11/site-packages
+COPY --from=build /app/.venv/lib/python3.13/site-packages /app/.venv/lib/python3.13/site-packages
 WORKDIR /app
 
 # Tell built-in python executable where to find packages.
-ENV PYTHONPATH="/app/src:/app/.venv/lib/python3.11/site-packages"
+ENV PYTHONPATH="/app/src:/app/.venv/lib/python3.13/site-packages"
 
 ENTRYPOINT ["python3", "-m", "duckdb_upgrade"]
